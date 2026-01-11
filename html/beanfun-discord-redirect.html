@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Redirecting…</title>
+<style>
+    body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Arial, sans-serif;
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        max-width: 680px;
+        padding: 24px;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, .06)
+    }
+
+    .btn {
+        display: inline-block;
+        padding: .6em 1em;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+    code {
+        background: #f6f8fa;
+        padding: .2em .4em;
+        border-radius: 6px
+    }
+</style>
+<div class="card">
+    <h1>Redirecting…</h1>
+    <p id="msg">破蘑菇跳轉服務(v0.0.1)，正在開啟 App，如果沒有自動跳轉，請按下方按鈕。</p>
+    <p>
+        <a id="manual" class="btn" href="#" rel="noopener noreferrer">直接開啟 App</a>
+    </p>
+    <p id="target" style="display:none"></p>
+    <p id="error" style="color:#b00020; display:none"></p>
+    <summary>專案連結</summary>
+    <p><a href="https://github.com/takidog/discord-beanfun">https://github.com/takidog/discord-beanfun</a></p>
+</div>
+<script>
+    (function () {
+        try {
+            const params = new URLSearchParams(location.search);
+            let raw = params.get('redirect');
+            const qs = location.search.substring(1);
+            const match = qs.match(/(?:^|&)redirect=([^&]*)/);
+            if (!match) throw new Error("缺少 redirect 參數");
+            raw = match[1]; // 保留原始 encode
+            const target = raw;
+
+            const ok = /^beanfunweblogin:\/\/qrcode\.login(\?|\/|$)/i.test(target);
+            if (!ok) throw new Error('不允許的目標 URI（僅允許 beanfunweblogin://qrcode.login…）');
+            document.getElementById('target').textContent = target;
+
+            const a = document.getElementById('manual');
+            a.href = target;
+            console.log(target);
+
+            // 自動嘗試跳轉
+            setTimeout(() => { location.href = target; }, 300);
+
+            setTimeout(() => {
+                document.getElementById('msg').textContent =
+                    '若仍未開啟，請點「手動開啟 App」。';
+            }, 5000);
+
+            // 提供 window.location 按鈕事件
+            // window.openApp = function (e) {
+            //     e.preventDefault();
+            //     try {
+            //         window.location = target;
+            //     } catch (err) {
+            //         alert('開啟失敗：' + err.message);
+            //     }
+            // };
+
+        } catch (e) {
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').textContent = '錯誤：' + e.message;
+            document.getElementById('msg').textContent = '請確認參數並重新嘗試。';
+            document.getElementById('manual').style.display = 'none';
+            document.getElementById('manual2').style.display = 'none';
+        }
+    })();
+</script>
+
+</html>
