@@ -57,8 +57,9 @@
             raw = match[1]; // 保留原始 encode
             const target = raw;
 
-            const ok = /^beanfunweblogin:\/\/qrcode\.login(\?|\/|$)/i.test(target);
-            if (!ok) throw new Error('不允許的目標 URI（僅允許 beanfunweblogin://qrcode.login…）');
+            const ok = /^(beanfunweblogin:\/\/qrcode\.login|gameplapp:\/gameplhost\/deeplink)(\?|\/|$)/i.test(target);
+            if (!ok) throw new Error('不允許的目標 URI（僅允許 beanfunweblogin://qrcode.login… 或 gameplapp:/gameplhost/deeplink…）');
+
             document.getElementById('target').textContent = target;
 
             const a = document.getElementById('manual');
