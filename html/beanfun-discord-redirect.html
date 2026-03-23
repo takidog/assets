@@ -37,7 +37,7 @@
 </style>
 <div class="card">
     <h1>Redirecting…</h1>
-    <p id="msg">破蘑菇跳轉服務(v0.0.1)，正在開啟 App，如果沒有自動跳轉，請按下方按鈕。</p>
+    <p id="msg">破蘑菇跳轉服務(v0.0.2)，正在開啟 App，如果沒有自動跳轉，請按下方按鈕。</p>
     <p>
         <a id="manual" class="btn" href="#" rel="noopener noreferrer">直接開啟 App</a>
     </p>
@@ -50,15 +50,11 @@
     (function () {
         try {
             const params = new URLSearchParams(location.search);
-            let raw = params.get('redirect');
-            const qs = location.search.substring(1);
-            const match = qs.match(/(?:^|&)redirect=([^&]*)/);
-            if (!match) throw new Error("缺少 redirect 參數");
-            raw = match[1]; // 保留原始 encode
-            const target = raw;
+            const target = params.get('redirect');
+            if (!target) throw new Error("缺少 redirect 參數");
 
-            const ok = /^(beanfunweblogin:\/\/qrcode\.login|gameplapp:\/gameplhost\/deeplink)(\?|\/|$)/i.test(target);
-            if (!ok) throw new Error('不允許的目標 URI（僅允許 beanfunweblogin://qrcode.login… 或 gameplapp:/gameplhost/deeplink…）');
+            const ok = /^(beanfunweblogin:\/\/qrcode\.login|gameplapp:\/\/gameplhost\/deeplink)(\?|\/|$)/i.test(target);
+            if (!ok) throw new Error('不允許的目標 URI（僅允許 beanfunweblogin://qrcode.login… 或 gameplapp://gameplhost/deeplink…）');
 
             document.getElementById('target').textContent = target;
 
